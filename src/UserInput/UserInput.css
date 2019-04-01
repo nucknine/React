@@ -1,0 +1,6 @@
+.userInput {
+  box-sizing: border-box;
+  width: 300px;
+  margin: 5px auto;
+  padding: 5px 10px;
+}
