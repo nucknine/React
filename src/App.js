@@ -1,62 +1,55 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import ValidationComponent from "./ValidationComponent/ValidationComponent";
-import CharComponent from "./CharComponent/CharComponent";
-import charComponent from "./CharComponent/CharComponent";
+import Validation from "./Validation/Validation";
+import Char from "./Char/Char";
 
 class App extends Component {
   state = {
-    textLength: 0,
-    charComponents: [],
-    inputValue: ""
+    userInput: "",
+    show: true
+  };
+  toggleCharList = () => {
+    this.setState({ show: !this.state.show });
+  };
+  inputChangedHandler = event => {
+    this.setState({ userInput: event.target.value });
   };
 
-  checkInputData = event => {
-    const charComponents = [...this.state.charComponents];
-    charComponents.push({
-      index: Math.floor(Math.random() * 1000),
-      char: event.target.value[event.target.value.length - 1]
-    });
-
-    this.setState({
-      charComponents,
-      textLength: event.target.value.length,
-      inputValue: event.target.value
-    });
-  };
-
-  deleteChar = id => {
-    const charComponents = [...this.state.charComponents];
-    let index = charComponents.findIndex(char => char.index === id);
-    charComponents.splice(index, 1);
-
-    let newValue = charComponents.map(charComp => charComp.char).join("");
-    this.setState({
-      charComponents,
-      inputValue: newValue
-    });
+  deleteCharHandler = index => {
+    const text = this.state.userInput.split("");
+    text.splice(index, 1);
+    const updatedText = text.join("");
+    this.setState({ userInput: updatedText });
   };
 
   render() {
-    let charComponents = [];
-    charComponents = this.state.charComponents.map(charComponent => {
-      return (
-        <CharComponent
-          click={this.deleteChar.bind(this)}
-          char={charComponent.char}
-          index={charComponent.index}
-          key={charComponent.index}
-        />
-      );
-    });
-
+    let charList = [];
+    if (this.state.show) {
+      charList = this.state.userInput.split("").map((ch, index) => {
+        return (
+          <Char
+            character={ch}
+            key={index}
+            clicked={this.deleteCharHandler.bind(this, index)}
+          />
+        );
+      });
+    }
     return (
       <div className="App">
-        <input value={this.state.inputValue} onChange={this.checkInputData} />
-        <p>{this.state.textLength}</p>
-        <ValidationComponent length={this.state.textLength} />
-        {charComponents}
+        <input
+          type="text"
+          onChange={this.inputChangedHandler}
+          value={this.state.userInput}
+        />
+        <p>{this.state.userInput}</p>
+        <Validation inputLength={this.state.userInput.length} />
+        <div>
+          <button onClick={this.toggleCharList.bind(this)}>
+            Show/Hide charList
+          </button>
+        </div>
+        {charList}
       </div>
     );
   }
