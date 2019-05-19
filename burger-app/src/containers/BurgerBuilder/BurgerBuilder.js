@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import Aux from "../../hoc/AuxComponent";
+import Aux from "../../hoc/AuxComponent/AuxComponent";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+
 const INGREDIENT_PRICES = {
   salad: 0.5,
   bacon: 0.7,
@@ -32,8 +33,10 @@ class BurgerBuilder extends Component {
   };
 
   updatePurchaseState(ingredients) {
-    //ingredients если тут использовать this.state.ingredients React не успеет обновить
-    // и мы получим устаревшую копию, поэтому мы передаем ingredients как аргумент
+    // this.state.ingredients React не успеет обновить
+    // и мы получим устаревшую копию (из-за того что this.setState работает асинхронно),
+    // поэтому мы передаем ingredients как аргумент
+    // нельзя использовать this.state напрямую в методах
     const sum = Object.keys(ingredients)
       .map(igKey => {
         return ingredients[igKey];
@@ -84,6 +87,10 @@ class BurgerBuilder extends Component {
     this.setState({ purchasing: false });
   };
 
+  purchaseContinueHandler = () => {
+    alert("sucess");
+  };
+
   render() {
     const disabledInfo = {
       ...this.state.ingredients
@@ -98,7 +105,12 @@ class BurgerBuilder extends Component {
           show={this.state.purchasing}
           modalClosed={this.purchaseCancelHandler}
         >
-          <OrderSummary ingredients={this.state.ingredients} />
+          <OrderSummary
+            price={this.state.totalPrice}
+            purchaseContinue={this.purchaseContinueHandler}
+            purchaseCancelled={this.purchaseCancelHandler}
+            ingredients={this.state.ingredients}
+          />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
