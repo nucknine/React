@@ -5,8 +5,12 @@ import Aux from "../../../hoc/AuxComponent/AuxComponent";
 
 class Modal extends Component {
   //This could be a functional component
+  // optimization
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.show !== this.props.show;
+    return (
+      nextProps.show !== this.props.show ||
+      nextProps.children !== this.props.children
+    );
   }
 
   render() {
