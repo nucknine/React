@@ -1,6 +1,7 @@
 import React from "react";
 import classes from "./Burger.css";
 import BurgerIngredient from "./BurgerIngredient/BurgerIngredient";
+// import { withRouter } from "react-router-dom";
 // import PropTypes from "prop-types";
 
 const burger = props => {
@@ -30,5 +31,7 @@ const burger = props => {
     </div>
   );
 };
-
+//withRouter позоляет видеть свойства match history во вложенный компонентах
+// эти свойства иначе видны только в компонентах указанных в <Route component={name}>
+// export default withRouter(burger);
 export default burger;
