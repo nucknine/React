@@ -1,54 +1,74 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import CounterControl from '../../components/CounterControl/CounterControl';
-import CounterOutput from '../../components/CounterOutput/CounterOutput';
+import CounterControl from "../../components/CounterControl/CounterControl";
+import CounterOutput from "../../components/CounterOutput/CounterOutput";
 
 class Counter extends Component {
-    state = {
-        counter: 0
-    }
+  state = {
+    counter: 0
+  };
 
-    counterChangedHandler = ( action, value ) => {
-        switch ( action ) {
-            case 'inc':
-                this.setState( ( prevState ) => { return { counter: prevState.counter + 1 } } )
-                break;
-            case 'dec':
-                this.setState( ( prevState ) => { return { counter: prevState.counter - 1 } } )
-                break;
-            case 'add':
-                this.setState( ( prevState ) => { return { counter: prevState.counter + value } } )
-                break;
-            case 'sub':
-                this.setState( ( prevState ) => { return { counter: prevState.counter - value } } )
-                break;
-        }
+  counterChangedHandler = (action, value) => {
+    switch (action) {
+      case "inc":
+        this.setState(prevState => {
+          return { counter: prevState.counter + 1 };
+        });
+        break;
+      case "dec":
+        this.setState(prevState => {
+          return { counter: prevState.counter - 1 };
+        });
+        break;
+      case "add":
+        this.setState(prevState => {
+          return { counter: prevState.counter + value };
+        });
+        break;
+      case "sub":
+        this.setState(prevState => {
+          return { counter: prevState.counter - value };
+        });
+        break;
     }
+  };
 
-    render () {
-        return (
-            <div>
-                <CounterOutput value={this.props.ctr} />
-                <CounterControl label="Increment" clicked={this.props.onIncrementCounter} />
-                <CounterControl label="Decrement" clicked={() => this.counterChangedHandler( 'dec' )}  />
-                <CounterControl label="Add 5" clicked={() => this.counterChangedHandler( 'add', 5 )}  />
-                <CounterControl label="Subtract 5" clicked={() => this.counterChangedHandler( 'sub', 5 )}  />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <CounterOutput value={this.props.ctr} />
+        <CounterControl
+          label="Increment"
+          clicked={this.props.onIncrementCounter}
+        />
+        <CounterControl label="Decrement" clicked={this.props.onSubtract} />
+        <CounterControl label="Add 5" clicked={() => this.props.onAddSome(5)} />
+        <CounterControl
+          label="Subtract 5"
+          clicked={() => this.props.onSubSome(5)}
+        />
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => {
-    return {
-        ctr: state.counter
-    };
+  return {
+    ctr: state.counter
+  };
 };
 
 const mapDispatchToProps = dispatch => {
-    return {
-        onIncrementCounter: () => dispatch({type: 'INCREMENT'})
-    };
+  return {
+    onIncrementCounter: () => dispatch({ type: "INCREMENT" }),
+    onAddSome: () => dispatch({ type: "ADD_SOME", value: 5 }),
+    onSubSome: () => dispatch({ type: "SUB_SOME", value: 5 }),
+    onSubtract: () => dispatch({ type: "SUBTRACT" })
+  };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Counter);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Counter);
