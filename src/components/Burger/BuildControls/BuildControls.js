@@ -1,4 +1,5 @@
 import React from "react";
+
 import classes from "./BuildControls.css";
 import BuildControl from "./BuildControl/BuildControl";
 
@@ -24,9 +25,9 @@ const buildControls = props => (
       />
     ))}
     <button
-      onClick={props.ordered}
-      disabled={!props.purchasable}
       className={classes.OrderButton}
+      disabled={!props.purchasable}
+      onClick={props.ordered}
     >
       ORDER NOW
     </button>
