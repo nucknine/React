@@ -9,7 +9,8 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
 import { connect } from "react-redux";
-import * as actionTypes from "../../store/actions";
+import * as actionTypes from "../../store/actions/actionTypes";
+import * as burgerBuilderActions from "../../store/actions/index";
 
 class BurgerBuilder extends Component {
   // old syntax
@@ -20,20 +21,11 @@ class BurgerBuilder extends Component {
 
   // new syntax
   state = {
-    purchasing: false,
-    loading: false,
-    error: false
+    purchasing: false
   };
 
   componentDidMount() {
-    axios
-      .get("/ingredients.json")
-      .then(response => {
-        this.props.onUpdateIngredients(response.data);
-      })
-      .catch(error => {
-        this.setState({ error: true });
-      });
+    this.props.onInitIngredients();
   }
 
   updatePurchaseState(ingredients) {
@@ -103,10 +95,6 @@ class BurgerBuilder extends Component {
       );
     }
 
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
-
     return (
       <Aux>
         <Modal
@@ -130,12 +118,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onUpdateIngredients: data =>
-      dispatch({ type: actionTypes.INGREDIENTS_UPDATE, ingredients: data }),
-    onAddIngredient: data =>
-      dispatch({ type: actionTypes.ADD_INGREDIENT, ingredientName: data }),
-    onRemoveIngredient: data =>
-      dispatch({ type: actionTypes.REMOVE_INGREDIENT, ingredientName: data }),
+    onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
+    onAddIngredient: name => dispatch(burgerBuilderActions.addIngredient(name)),
+    onRemoveIngredient: name =>
+      dispatch(burgerBuilderActions.removeIngredient(name)),
     onUpdatePrice: price => ({ type: actionTypes.PRICE_UPDATE, price })
   };
 };

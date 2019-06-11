@@ -4,6 +4,9 @@ import Order from "../../components/Order/Order";
 import axios from "../../axios-orders";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
+import { connect } from "react-redux";
+import * as actionCreators from "../../store/actions/index";
+
 class Orders extends Component {
   state = {
     orders: [],
