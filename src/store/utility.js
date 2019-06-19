@@ -1,6 +1,6 @@
-export function updateObject(state, updatedValues) {
+export function updateObject(oldObject, updatedValues) {
   return {
-    ...state,
+    ...oldObject,
     ...updatedValues
   };
 }

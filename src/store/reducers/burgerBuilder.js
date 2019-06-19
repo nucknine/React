@@ -14,47 +14,62 @@ const INGREDIENT_PRICES = {
   meat: 1.3
 };
 
-const ingredientsInit = (state, action) => {
-  return {
-    ...state,
+const addIngredient = (state, action) => {
+  const updatedIngredients = {
+    [action.ingredientName]: state.ingredients[action.ingredientName] + 1
+  };
+  const updateIngredients = updateObject(state.ingredients, updatedIngredients);
+  const updatedState = {
+    ingredients: updateIngredients,
+    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
+  };
+
+  return updateObject(state, updatedState);
+};
+
+const removeIngredient = (state, action) => {
+  const updatedIng = {
+    [action.ingredientName]: state.ingredients[action.ingredientName] - 1
+  };
+  const updateIngs = updateObject(state.ingredients, updatedIng);
+  const updatedSt = {
+    ingredients: updateIngs,
+    totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
+  };
+
+  return updateObject(state, updatedSt);
+};
+
+const setIngredients = (state, action) => {
+  return updateObject(state, {
     ingredients: {
       salad: action.ingredients.salad,
       bacon: action.ingredients.bacon,
       cheese: action.ingredients.cheese,
       meat: action.ingredients.meat
     },
+    totalPrice: 4,
     error: false
-  };
+  });
+};
+
+const fetchIngredientsFailed = (state, action) => {
+  return updateObject(state, { error: true });
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_INGREDIENTS:
-      return ingredientsInit(state, action);
-    case actionTypes.ADD_INGREDIENT: {
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] + 1
-        },
-        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
-      };
-    }
-    case actionTypes.REMOVE_INGREDIENT: {
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] - 1
-        },
-        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
-      };
-    }
+      return setIngredients(state, action);
+    case actionTypes.ADD_INGREDIENT:
+      return addIngredient(state, action);
+    case actionTypes.REMOVE_INGREDIENT:
+      return removeIngredient(state, action);
     case actionTypes.FETCH_INGREDIENTS_FAILED:
-      return updateObject(state, { error: true });
+      return fetchIngredientsFailed(state, action);
+    default:
+      return state;
   }
-  return state;
 };
 
 export default reducer;
